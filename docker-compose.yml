@@ -1,0 +1,19 @@
+services:
+  tcpr:
+    build: .
+    image: tcp-reassembly:1.0.0
+    container_name: tcp-reassembly
+    ports:
+      - "8000:8000"
+    volumes:
+      - tcpr-data:/data
+    environment:
+      # 进程内存上限（仅声明，配合应用内 SQLite 小缓存 + 流式分块实现）
+      TCPR_DB_PATH: /data/tcpr.db
+      TCPR_CHUNK_SIZE: "32768"
+      TCPR_SQLITE_CACHE_PAGES: "2048"
+    mem_limit: 256m
+    restart: unless-stopped
+
+volumes:
+  tcpr-data:
